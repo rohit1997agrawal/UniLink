@@ -1,8 +1,12 @@
 import java.util.ArrayList;
-
+// ????? Add getters and setters and use them for all cases
 public abstract class Post {
     private String id;
     private String title;
+
+    public String getCreator_id() {
+        return creator_id;
+    }
 
     public String getTitle() {
         return title;
@@ -41,7 +45,7 @@ public abstract class Post {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.creator_id = id;
+        this.creator_id = creator_id;
         this.status = "OPEN";  //By Default Status is set to "OPEN"
 
     }

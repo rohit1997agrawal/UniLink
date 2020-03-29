@@ -1,50 +1,89 @@
 public class Event extends Post {
-    private String venue;
-    private String date; //Format dd/mm/yyyy
-    private int capacity;
-    private int attendee_count;
-// ????? Add getters and setters and use them for all cases
-    public Event()
-    {
+    private String venue; //String to Store Venue of Event
+    private String date; //String to store date of Event
+    private int capacity; //Integer to store Capacity
+    private int attendee_count; //Integer to store attendee count
+
+    public Event() {
     }
 
-    public Event(String id , String title , String description , String venue , String date , int capacity , String creator_id) {
-        super(id, title , description , creator_id);
+    //Parametrized constructor to initialize attributes and create an "Event"
+    public Event(String id, String title, String description, String venue, String date, int capacity, String creator_id) {
+        //Calling Constructor of Super Class "Post" to initialize attributes of Post
+        super(id, title, description, creator_id);
         this.venue = venue;
-        this.date=date;
-        this.capacity=capacity;
+        this.date = date;
+        this.capacity = capacity;
     }
 
+    //Getters and Setters
+    public String getVenue() {
+        return venue;
+    }
+
+    public void setVenue(String venue) {
+        this.venue = venue;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public int getAttendee_count() {
+        return attendee_count;
+    }
+
+    public void setAttendee_count(int attendee_count) {
+        this.attendee_count = attendee_count;
+    }
+
+    //Override the getPostDetails() method of Super Class
     @Override
-    public String getPostDetails(){
-        String post_details = super.getPostDetails();
-        String event_details = post_details +  "\nVenue:\t\t"+this.venue+"\nDate:\t\t"+this.date+"\nCapacity:\t\t"+this.capacity+"\nAttendees:\t\t"+this.attendee_count;
-        return event_details;
+    public String getPostDetails() {
+        String post_details = super.getPostDetails();  //To call the method from Super Class "Post"
+        String event_details = post_details + "\nVenue:\t\t" + this.getVenue() + "\nDate:\t\t" + this.getDate() + "\nCapacity:\t\t" + this.getCapacity() + "\nAttendees:\t\t" + this.getAttendee_count();
+        return event_details; //Contains All Details i.e Post Details + Event Details
     }
 
-    public boolean handleReply(Reply reply){  //Can creator of event join his / her event ??????
+    //Implementation of Abstract method "handleReply" to handle Reply to an "Event"
+    public boolean handleReply(Reply reply) {
         Boolean add_reply = false;
-        if(reply.getValue() == 1 && this.getStatus().equals("OPEN"))  //To check if Reply is in "1" and Event is still "OPEN"
-        {
-
-            if(this.getMarksList().size() == 0) //If attendees list is Empty , no need to check if "Student id" is already present
-            {
+        //Condition to check if Reply is in "1" and Event is still "OPEN"
+        if (reply.getValue() == 1 && this.getStatus().equals("OPEN")) {
+            //If attendees list is Empty , no need to check if "Student id" is already present
+            if (this.getReplyList().size() == 0) {
                 add_reply = true;
-            }
-            for (Reply iterator : this.getMarksList()) {
-                {
-                    if(!iterator.getResponder_id().equals(reply.getResponder_id())) //To check if "Student id" is already in the Attendee list
+            } else {
+                //If Student list not Empty, check if "student id" is already part of Attendee List
+                add_reply = true;
+                for (Reply iterator : this.getReplyList()) {
                     {
-                        add_reply = true;
+                        if (iterator.getResponder_id().equals(reply.getResponder_id())) {
+                            add_reply = false;
+                            break;
+                        }
                     }
                 }
             }
         }
-        if(add_reply)
-        {
-            this.getMarksList().add(reply);   //All Criteria match , so add the student id to attendee list
-            this.attendee_count ++;
-            if(this.attendee_count == this.capacity)  //To Close the event if Attendees match the capacity
+        if (add_reply) {
+            //All Criteria match , Adding current "Reply object" to ArrayList "ReplyList"
+            this.getReplyList().add(reply);
+            this.attendee_count++;
+            //Condition to Close the event if Attendees count match the capacity
+            if (this.attendee_count == this.capacity)
             {
                 this.setStatus("CLOSE");
             }
@@ -55,24 +94,21 @@ public class Event extends Post {
 
     }
 
-    public String getReplyDetails()
-    {
+    //Implementation of Abstract method "getReplyDetails" to display "Attendee List" of "Event Post"
+    public String getReplyDetails() {
         String reply_details = "";
-        if(this.getMarksList().size() == 0)
-        {
+        if (this.getReplyList().size() == 0) {
             reply_details = "EMPTY";
-        }
-        else {
-            for (Reply iterator : this.getMarksList()) {
+        } else {
+            for (Reply iterator : this.getReplyList()) {
                 reply_details = reply_details + "," + iterator.getResponder_id();
             }
 
             reply_details = reply_details.substring(1);   //To Remove the first character "," from the String
         }
-        return "Attendee list: \t"+ reply_details;
+        return "Attendee list: \t" + reply_details;
 
     }
-
 
 
 }

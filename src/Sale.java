@@ -1,14 +1,14 @@
 public class Sale extends Post {
-    private float asking_price; //Attribute of Type float to Store Asking Price
-    private float highest_offer; //Attribute of Type float to Store Highest offer
-    private float minimum_raise; //Attribute of Type float to Store Minimum raise
+    private double asking_price; //Attribute of Type Double to Store Asking Price
+    private double highest_offer; //Attribute of Type Double to Store Highest offer
+    private double minimum_raise; //Attribute of Type Double to Store Minimum raise
 
 
     public Sale() {
     }
 
     //Parametrized constructor to initialize attributes and create an "Sale Post"
-    public Sale(String id, String title, String description, float asking_price, float minimum_raise, String creator_id) {
+    public Sale(String id, String title, String description, double asking_price, double minimum_raise, String creator_id) {
         //Calling Constructor of Super Class "Post" to initialize attributes of Post
         super(id, title, description, creator_id);
         this.asking_price = asking_price;
@@ -17,27 +17,27 @@ public class Sale extends Post {
     }
 
     //Getters and Setters
-    public float getAsking_price() {
+    public double getAsking_price() {
         return asking_price;
     }
 
-    public void setAsking_price(float asking_price) {
+    public void setAsking_price(double asking_price) {
         this.asking_price = asking_price;
     }
 
-    public float getHighest_offer() {
+    public double getHighest_offer() {
         return highest_offer;
     }
 
-    public void setHighest_offer(float highest_offer) {
+    public void setHighest_offer(double highest_offer) {
         this.highest_offer = highest_offer;
     }
 
-    public float getMinimum_raise() {
+    public double getMinimum_raise() {
         return minimum_raise;
     }
 
-    public void setMinimum_raise(float minimum_raise) {
+    public void setMinimum_raise(double minimum_raise) {
         this.minimum_raise = minimum_raise;
     }
 
@@ -51,8 +51,9 @@ public class Sale extends Post {
             highest_offer_value = "No OFFER";
         } else {
             highest_offer_value = String.valueOf(this.getHighest_offer());
+            highest_offer_value = "$" + highest_offer_value;
         }
-        String sale_details = post_details + "\nMinimum Raise:\t\t$" + this.minimum_raise + "\nHighest Offer :\t\t$" + highest_offer_value;
+        String sale_details = post_details + "\nMinimum Raise:\t\t$" + this.minimum_raise + "\nHighest Offer :\t\t" + highest_offer_value;
         return sale_details; //Contains All Details i.e Post Details + Sale Details
     }
 
@@ -60,21 +61,33 @@ public class Sale extends Post {
     public boolean handleReply(Reply reply) {
         Boolean add_reply = false;
         //To check if Job Post is open and offered Price is a positive number
-        if (this.getStatus().equals("OPEN") && reply.getValue() > 0) {
-            //To check if proposed price is greater than current highest offer
-            if (reply.getValue() > this.highest_offer) {
-                this.getReplyList().add(reply);//All Criteria match ,  Adding current "Reply object" to ArrayList "ReplyList"
-                this.highest_offer = reply.getValue(); //Update the "Lowest Offer" to current offer
+        if (this.getStatus().equals("OPEN"))
+            if (reply.getValue() > 0) {
+                //To check if proposed price is greater than current highest offer
+                if (reply.getValue() > this.highest_offer) {
+                    if (reply.getValue() >= (this.highest_offer + this.minimum_raise)) {
+                        this.getReplyList().add(reply);//All Criteria match ,  Adding current "Reply object" to ArrayList "ReplyList"
+                        this.highest_offer = reply.getValue(); //Update the "Lowest Offer" to current offer
 
-                if (reply.getValue() >= this.asking_price) //To check if proposed price is greater than asking price
-                {
-                    this.setStatus("CLOSE");   //Close the Sale and Sell the item to the current user
-                    System.out.println("ITEM SOLD to you!!");
+                        if (reply.getValue() >= this.asking_price) //To check if proposed price is greater than asking price
+                        {
+                            this.setStatus("CLOSE");   //Close the Sale and Sell the item to the current user
+                            System.out.println("ITEM SOLD to you!!");
+                        }
+                    } else {
+                        System.out.println("Your offer not greater than current highest offer by the set minimum Raise");
+                    }
+
+                    return true;
+                } else {
+                    System.out.println("Your offer lower than current highest offer!");
                 }
 
-                return true;
+            } else {
+                System.out.println("Offer Price can not be negative! ");
             }
-
+        else {
+            System.out.println("Sale Closed!");
         }
         return false; //One or more criteria not not passed
     }

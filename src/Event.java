@@ -61,34 +61,41 @@ public class Event extends Post {
     public boolean handleReply(Reply reply) {
         Boolean add_reply = false;
         //Condition to check if Reply is in "1" and Event is still "OPEN"
-        if (reply.getValue() == 1 && this.getStatus().equals("OPEN")) {
-            //If attendees list is Empty , no need to check if "Student id" is already present
-            if (this.getReplyList().size() == 0) {
-                add_reply = true;
-            } else {
-                //If Student list not Empty, check if "student id" is already part of Attendee List
-                add_reply = true;
-                for (Reply iterator : this.getReplyList()) {
-                    {
-                        if (iterator.getResponder_id().equals(reply.getResponder_id())) {
-                            add_reply = false;
-                            break;
+        if (reply.getValue() == 1)
+            if (this.getStatus().equals("OPEN")) {
+                //If attendees list is Empty , no need to check if "Student id" is already present
+                if (this.getReplyList().size() == 0) {
+                    add_reply = true;
+                } else {
+                    //If Student list not Empty, check if "student id" is already part of Attendee List
+                    add_reply = true;
+                    for (Reply iterator : this.getReplyList()) {
+                        {
+                            if (iterator.getResponder_id().equals(reply.getResponder_id())) {
+                                System.out.println("User already part of Event!! ");
+                                add_reply = false;
+                                break;
+                            }
                         }
                     }
                 }
+            } else {
+                System.out.println("Event CLOSED!!");
             }
+        else {
+            System.out.println("Invalid input!!");
         }
         if (add_reply) {
             //All Criteria match , Adding current "Reply object" to ArrayList "ReplyList"
             this.getReplyList().add(reply);
             this.attendee_count++;
             //Condition to Close the event if Attendees count match the capacity
-            if (this.attendee_count == this.capacity)
-            {
+            if (this.attendee_count == this.capacity) {
                 this.setStatus("CLOSE");
             }
             return true;
         }
+
         return false; //One or more criteria not passed, not able to add "student id" in attendee list
 
 

@@ -9,7 +9,6 @@ public abstract class Post {  //Abstract class , as it contains Abstract methods
     private ArrayList<Reply> replyList = new ArrayList<Reply>(); //ArrayList of type "Reply" class , to store Replies of Post
 
 
-
     public Post() {
     }
 

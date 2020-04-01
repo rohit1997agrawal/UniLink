@@ -1,14 +1,14 @@
 public class Reply {
 
     private String post_id;  //String to store POST ID
-    private float value; //String to store Reply value
+    private double value; //Double to store Reply value
     private String responder_id; //String to store Responder Id
 
     public Reply() {
     }
 
     //Constructor to initialize values of attributes
-    public Reply(String post_id, float value, String responder_id) {
+    public Reply(String post_id, double value, String responder_id) {
         this.post_id = post_id;
         this.value = value;
         this.responder_id = responder_id;
@@ -16,11 +16,11 @@ public class Reply {
     }
 
     //Getters and Setters
-    public float getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

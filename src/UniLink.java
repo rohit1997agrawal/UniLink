@@ -36,6 +36,7 @@ public class UniLink {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         double value;
+        Boolean post_found_reply = false;
         try {
 
             for (Post iterator : postCollection) {
@@ -44,6 +45,7 @@ public class UniLink {
                 if (iterator_id.equals(reply_post_id)) {
                     //If Entered Post Id of type Event , Show user option to join Event
                     if (iterator_id.substring(0, 3).equals("EVE")) {
+                        post_found_reply = true;
                         if (iterator.getCreator_id().equals(responder_id)) //To check if user is trying to "Reply" to his own Post
                         {
                             System.out.println("Sorry! Can not Reply to your own Post!! ");
@@ -66,7 +68,7 @@ public class UniLink {
 
                     //If Entered Post Id of type Job , Show user option to enter offer for Job
                     else if (iterator_id.substring(0, 3).equals("JOB")) {
-
+                        post_found_reply = true;
                         if (iterator.getCreator_id().equals(responder_id)) //To check if user is trying to "Reply" to his own Post
                         {
                             System.out.println("Sorry! Can not Reply to your own Post!! ");
@@ -87,7 +89,7 @@ public class UniLink {
                     }
                     //If Entered Post Id of type Sale , Show user option to enter offer for Sale
                     else if (iterator_id.substring(0, 3).equals("SAL")) {
-
+                        post_found_reply = true;
                         if (iterator.getCreator_id().equals(responder_id)) //To check if user is trying to "Reply" to his own Post
                         {
                             System.out.println("Sorry! Can not Reply to your own Post!! ");
@@ -111,10 +113,12 @@ public class UniLink {
 
                 }
                 //To handle is user enters incorrect or wrong "Post id"
-                else {
-                    System.out.println("Invalid Post ID or Post not found ! Returning to main menu");
-                }
 
+
+            }
+            if(!post_found_reply)
+            {
+                System.out.println("Invalid Post id or Post not found! Returning to main menu");
             }
         }
         //To handle if user enters incorrect Decimal number for Reply!
@@ -204,9 +208,50 @@ public class UniLink {
 
     }
 
+    //Method to hard-code some data for testing purposes
+    public void hardCodeData()
+    {
+        //To hard code one Event "EVE001" with few attendees
+        Event newEvent = new Event("EVE001", "Programming Study Group ", "Let's meet tonight to finish the assignment" , "RMIT Library","06/05/2020", 5, "S001");
+        postCollection.add(newEvent);
+        Reply replyEvent1 = new Reply("EVE001",1, "S002");
+        newEvent.handleReply(replyEvent1);
+        Reply replyEvent2 = new Reply("EVE001",1, "S003");
+        newEvent.handleReply(replyEvent2);
+        Reply replyEvent3 = new Reply("EVE001",1, "S004");
+        newEvent.handleReply(replyEvent3);
+
+        //To hard code one Sale with few offers
+        Sale newSale = new Sale("SAL001","I phone 6S","Working condtion , with box and charger",400,20,"S005");
+        postCollection.add(newSale);
+        Reply replySale1 = new Reply("SAL001",200, "S006");
+        newSale.handleReply(replySale1);
+        Reply replySale2 = new Reply("SAL001",250, "S007");
+        newSale.handleReply(replySale2);
+        Reply replySale3 = new Reply("SAL001",300, "S008");
+        newSale.handleReply(replySale3);
+
+        //To hard code one Job with few offers
+        Job newJob = new Job("JOB001","Changing house","Need someone to help me move my belongings to new place",200,"S009");
+        postCollection.add(newJob);
+        Reply replyJob1 = new Reply("JOB001",200, "S010");
+        newJob.handleReply(replyJob1);
+        Reply replyJob2 = new Reply("JOB001",150, "S011");
+        newJob.handleReply(replyJob2);
+        Reply replyJob3 = new Reply("JOB001",100, "S012");
+        newJob.handleReply(replyJob3);
+
+
+
+
+
+    }
+
 
     //Method called in "Startup.java" , shows MENU to Login and Perform all the operations of Unilink Application
     public void startUpApplication() throws Exception {
+
+
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         boolean menu_open = true, internal_menu = true;
@@ -333,13 +378,7 @@ public class UniLink {
                                         System.out.println("Success! Your Job has been created with id: " + id_new);
                                         break;
 
-                                    case 6:
-                                        for (Post iterator : postCollection) { //To Display all Post Details
-                                            System.out.println(iterator.getPostDetails());
-                                            System.out.println("---------------------------------------------");
 
-                                        }
-                                        break;
 
                                     case 4:
                                         String reply_post_id;
@@ -362,13 +401,113 @@ public class UniLink {
                                         break;
 
                                     case 5:
+                                        Boolean my_posts = false;
                                         for (Post iterator : postCollection) {
-                                            if (iterator.getCreator_id().equals(creator_id)) { //To show Post and Reply Details of only the current user
+                                            if (iterator.getCreator_id().equals(creator_id)) {//To show Post and Reply Details of only the current user
+                                                my_posts = true;
                                                 System.out.println(iterator.getPostDetails());
                                                 System.out.println(iterator.getReplyDetails());
                                                 System.out.println("---------------------------------------------");
                                             }
 
+
+                                        }
+                                        if(!my_posts)
+                                        {
+                                            System.out.println("No Posts to Display!");
+                                        }
+                                        break;
+                                    case 6:
+                                        for (Post iterator : postCollection) { //To Display all Post Details
+                                            System.out.println(iterator.getPostDetails());
+                                            System.out.println("---------------------------------------------");
+
+                                        }
+                                        if(postCollection.size() == 0 )
+                                        {
+                                            System.out.println("No Posts to Display!");
+                                        }
+                                        break;
+                                    case 7:
+                                            System.out.println("Enter Post Id to close the post");
+                                            String post_id = inputValidateString("Post Id ");
+                                            Boolean post_found = false;
+                                        for (Post iterator : postCollection) {
+                                            if(iterator.getId().equals(post_id)) //To get the Post with respect to the entered Post id
+                                            {
+                                                post_found = true;
+                                                if (iterator.getCreator_id().equals(creator_id)) { //To check if Creator of post is trying to close the post
+                                                    if(iterator.getStatus().equals("OPEN")) {
+                                                        System.out.println("Are you sure you want to Close the post ? ");
+                                                        String confirm_message = inputValidateString("Yes/No ");
+                                                        if (confirm_message.equalsIgnoreCase("Yes")) {
+                                                            iterator.setStatus("CLOSE");
+                                                            System.out.println("You have successfully closed the Post");
+
+                                                        } else {
+                                                            System.out.println("The post is not closed");
+
+
+                                                        }
+                                                        break;
+                                                    }
+                                                    else{
+                                                        System.out.println("The Post is already Closed!");
+                                                    }
+                                                }
+                                                else{
+                                                    System.out.println("You are not the creator of the Post! You can not close it");
+                                                    break;
+                                                }
+                                            }
+
+
+                                        }
+                                        if(!post_found)
+                                        {
+                                            System.out.println("Entered Post id not found ");
+                                        }
+                                        break;
+
+                                    case 8:
+                                        System.out.println("Enter Post Id to delete the post");
+                                        String post_id_delete = inputValidateString("Post Id ");
+                                        Boolean post_found_delete = false;
+                                        Iterator<Post> iterator = postCollection.iterator();  //Using an iterator to remove/delete the post
+                                        while (iterator.hasNext()) {
+                                            Post  currentPost = iterator.next();
+
+                                            if(currentPost.getId().equals(post_id_delete)) //To get the Post with respect to the entered Post id
+                                            {
+                                                post_found_delete = true;
+                                                if (currentPost.getCreator_id().equals(creator_id)) { //To check if Creator of post is trying to close the post
+                                                    System.out.println("Are you sure you want to Delete the post ? ");
+                                                    String confirm_message = inputValidateString("Yes/No");
+                                                    if(confirm_message.equalsIgnoreCase("Yes"))
+                                                    {
+                                                        iterator.remove();
+                                                        System.out.println("You have Deleted the Post");
+
+                                                    }
+                                                    else{
+                                                        System.out.println("The post is not Deleted");
+
+
+                                                    }
+                                                    break;
+
+                                                }
+                                                else{
+                                                    System.out.println("You are not the creator of the Post! You can not Delete it");
+                                                    break;
+                                                }
+                                            }
+
+
+                                        }
+                                        if(!post_found_delete)
+                                        {
+                                            System.out.println("Entered Post id not found ");
                                         }
                                         break;
 

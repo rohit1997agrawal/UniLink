@@ -57,7 +57,7 @@ public abstract class Post {  //Abstract class , as it contains Abstract methods
 
     //Method to Return Post Details
     public String getPostDetails() {
-        String post_details = "ID:\t\t" + this.getId() + "\nTitle:\t\t" + this.getTitle() + "\nDescription:\t\t" + this.getDescription() + "\nCreator Id:\t\t" + this.getCreator_id() + "\nStatus:\t\t" + this.getStatus();
+        String post_details = "ID:\t\t\t\t" + this.getId() + "\nTitle:\t\t\t" + this.getTitle() + "\nDescription:\t" + this.getDescription() + "\nCreator Id:\t\t" + this.getCreator_id() + "\nStatus:\t\t\t" + this.getStatus();
         return post_details;
     }
 

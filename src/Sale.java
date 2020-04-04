@@ -53,7 +53,7 @@ public class Sale extends Post {
             highest_offer_value = String.valueOf(this.getHighest_offer());
             highest_offer_value = "$" + highest_offer_value;
         }
-        String sale_details = post_details + "\nMinimum Raise:\t\t$" + this.minimum_raise + "\nHighest Offer :\t\t" + highest_offer_value;
+        String sale_details = post_details + "\nMinimum Raise:\t$" + this.minimum_raise + "\nHighest Offer :\t" + highest_offer_value;
         return sale_details; //Contains All Details i.e Post Details + Sale Details
     }
 
@@ -76,6 +76,7 @@ public class Sale extends Post {
                         }
                     } else {
                         System.out.println("Your offer not greater than current highest offer by the set minimum Raise");
+                        return false;
                     }
 
                     return true;
@@ -100,10 +101,10 @@ public class Sale extends Post {
         } else {
             //To Display offer history in Descending order , Print in Reverse order
             for (int i = getReplyList().size() - 1; i >= 0; i--) {
-                reply_details = reply_details + "\n" + getReplyList().get(i).getResponder_id() + ":\t" + getReplyList().get(i).getValue();
+                reply_details = reply_details + "\n" + getReplyList().get(i).getResponder_id() + ":\t$" + getReplyList().get(i).getValue();
             }
         }
         String askingprice = "\nAsking Price: \n $" + this.asking_price + "\n";
-        return askingprice + "-- Offer History --  \n" + reply_details;  //Return the Offer history
+        return askingprice + "\n-- Offer History --  " + reply_details;  //Return the Offer history
     }
 }

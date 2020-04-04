@@ -42,7 +42,7 @@ public class Job extends Post {
             lowest_offer_value = String.valueOf(this.getLowest_offer());
             lowest_offer_value = "$" + lowest_offer_value;
         }
-        String job_details = post_details + "\nProposed Price :\t\t$" + this.getProposed_price() + "\nLowest Offer: \t\t" + lowest_offer_value;
+        String job_details = post_details + "\nProposed Price:\t$" + this.getProposed_price() + "\nLowest Offer:\t" + lowest_offer_value;
         return job_details; //Contains All Details i.e Post Details + Job Details
     }
 
@@ -78,12 +78,12 @@ public class Job extends Post {
         } else {
             //To Display offer history in Ascending order , Print the Array List "replyList" in Reverse order
             for (int i = getReplyList().size() - 1; i >= 0; i--) {
-                reply_details = reply_details + "\n" + getReplyList().get(i).getResponder_id() + ":\t" + getReplyList().get(i).getValue();
+                reply_details = reply_details + "\n" + getReplyList().get(i).getResponder_id() + ":\t$" + getReplyList().get(i).getValue();
             }
 
 
         }
-        return "-- Offer History --  \n" + reply_details;  //Return the Offer history
+        return "\n-- Offer History -- " + reply_details;  //Return the Offer history
 
     }
 

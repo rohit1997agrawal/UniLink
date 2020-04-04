@@ -53,7 +53,7 @@ public class Event extends Post {
     @Override
     public String getPostDetails() {
         String post_details = super.getPostDetails();  //To call the method from Super Class "Post"
-        String event_details = post_details + "\nVenue:\t\t" + this.getVenue() + "\nDate:\t\t" + this.getDate() + "\nCapacity:\t\t" + this.getCapacity() + "\nAttendees:\t\t" + this.getAttendee_count();
+        String event_details = post_details + "\nVenue:\t\t\t" + this.getVenue() + "\nDate:\t\t\t" + this.getDate() + "\nCapacity:\t\t" + this.getCapacity() + "\nAttendees:\t\t" + this.getAttendee_count();
         return event_details; //Contains All Details i.e Post Details + Event Details
     }
 
